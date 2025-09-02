@@ -1,10 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { NotificationComponent } from './notification/notification.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
+      imports: [AppComponent, NotificationComponent],
     }).compileComponents();
   });
 
@@ -20,10 +21,10 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('notifications-frontend');
   });
 
-  it('should render title', () => {
+  it('should render NotificationComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, notifications-frontend');
+    expect(compiled.querySelector('app-notification')).not.toBeNull();
   });
 });

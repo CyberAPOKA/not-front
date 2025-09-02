@@ -28,7 +28,7 @@ interface Notification {
     MatSelectModule,
     MatButtonModule,
     MatListModule,
-    MatInputModule,
+    MatInputModule
   ],
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.css'],

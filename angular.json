@@ -89,7 +89,7 @@
             ],
             "styles": [
               "@angular/material/prebuilt-themes/magenta-violet.css",
-              "src/styles.css"
+              "src/styles.test.css"
             ],
             "scripts": []
           }
