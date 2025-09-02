@@ -1,0 +1,13 @@
+{
+    "TITLE": "Notification System",
+    "PLACEHOLDER": "Enter message...",
+    "SEND": "Send Notification",
+    "LANGUAGE": "Language",
+    "FILTER_MESSAGE": "Filter by message",
+    "FILTER_STATUS": "Filter by status",
+    "ALL": "All",
+    "PENDING": "Pending",
+    "PROCESSING": "Processing",
+    "PROCESSED_SUCCESS": "Processed successfully",
+    "PROCESSING_FAILED": "Processing failed"
+}

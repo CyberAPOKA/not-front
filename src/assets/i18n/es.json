@@ -1,0 +1,13 @@
+{
+    "TITLE": "Sistema de Notificaciones",
+    "PLACEHOLDER": "Escribe el mensaje...",
+    "SEND": "Enviar Notificación",
+    "LANGUAGE": "Idioma",
+    "FILTER_MESSAGE": "Filtrar por mensaje",
+    "FILTER_STATUS": "Filtrar por estado",
+    "ALL": "Todos",
+    "PENDING": "Pendiente",
+    "PROCESSING": "Procesando",
+    "PROCESSED_SUCCESS": "Procesado con éxito",
+    "PROCESSING_FAILED": "Fallo en el procesamiento"
+}

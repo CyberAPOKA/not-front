@@ -1,0 +1,13 @@
+{
+  "TITLE": "Sistema de Notificações",
+  "PLACEHOLDER": "Digite a mensagem...",
+  "SEND": "Enviar Notificação",
+  "LANGUAGE": "Idioma",
+  "FILTER_MESSAGE": "Filtrar por mensagem",
+  "FILTER_STATUS": "Filtrar por status",
+  "ALL": "Todos",
+  "PENDING": "Pendente",
+  "PROCESSING": "Processando",
+  "PROCESSED_SUCCESS": "Processado com sucesso",
+  "PROCESSING_FAILED": "Falha no processamento"
+}

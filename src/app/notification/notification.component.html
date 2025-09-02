@@ -1,0 +1,79 @@
+<div
+  class="max-w-4xl mx-auto mt-6 p-6 shadow rounded-xl"
+  style="background-color: #ffabf3"
+>
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold">{{ "TITLE" | translate }}</h2>
+
+    <mat-form-field class="w-40">
+      <mat-label>{{ "LANGUAGE" | translate }}</mat-label>
+      <mat-select (selectionChange)="changeLanguage($event.value)">
+        <mat-option value="en">English</mat-option>
+        <mat-option value="pt">Português</mat-option>
+        <mat-option value="es">Español</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="flex flex-col">
+    <mat-form-field class="flex-1">
+      <mat-label>{{ "PLACEHOLDER" | translate }}</mat-label>
+      <input matInput [(ngModel)]="message" />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="send()">
+      {{ "SEND" | translate }}
+    </button>
+  </div>
+
+  <div
+    class="mt-4 rounded-lg overflow-auto"
+    style="background-color: #4e444b !important; max-height: 40rem"
+  >
+    <div class="flex gap-4 p-4">
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>{{ "FILTER_MESSAGE" | translate }}</mat-label>
+        <input matInput [(ngModel)]="filterText" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-48">
+        <mat-label>{{ "FILTER_STATUS" | translate }}</mat-label>
+        <mat-select [(ngModel)]="filterStatus">
+          <mat-option value="">{{ "ALL" | translate }}</mat-option>
+          <mat-option value="PENDING">{{ "PENDING" | translate }}</mat-option>
+          <mat-option value="PROCESSING">{{
+            "PROCESSING" | translate
+          }}</mat-option>
+          <mat-option value="PROCESSED_SUCCESS">{{
+            "PROCESSED_SUCCESS" | translate
+          }}</mat-option>
+          <mat-option value="PROCESSING_FAILED">{{
+            "PROCESSING_FAILED" | translate
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div
+      *ngFor="let n of filteredNotifications"
+      class="flex flex-col border-b last:border-0 border-white"
+    >
+      <div class="p-4">
+        <span class="text-white font-mono text-sm">{{ n.messageId }}</span>
+        <span class="text-white font-bold text-lg">
+          "{{ n.messageContent }}" →
+        </span>
+        <span
+          [ngClass]="{
+            'text-green-600 font-bold': n.status === 'PROCESSED_SUCCESS',
+            'text-red-600 font-bold': n.status === 'PROCESSING_FAILED',
+            'text-orange-600':
+              n.status.includes('PENDING') || n.status === 'PROCESSING'
+          }"
+        >
+          {{ n.status | translate }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
