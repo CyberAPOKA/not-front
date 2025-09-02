@@ -9,6 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
+import { io, Socket } from 'socket.io-client';
 
 interface Notification {
   messageId: string;
@@ -35,9 +36,9 @@ interface Notification {
 export class NotificationComponent implements OnInit, OnDestroy {
   message = '';
   notifications: Notification[] = [];
-  intervalId: any;
   filterText = '';
   filterStatus = '';
+  socket!: Socket;
 
   constructor(
     private notificationService: NotificationService,
@@ -48,21 +49,52 @@ export class NotificationComponent implements OnInit, OnDestroy {
     this.translate.use('en');
   }
 
+  currentLang = 'en';
   ngOnInit(): void {
     const saved = localStorage.getItem('notifications');
     if (saved) {
       this.notifications = JSON.parse(saved);
     }
 
-    this.intervalId = setInterval(() => this.updateStatuses(), 3000);
+    const savedFilterText = localStorage.getItem('filterText');
+    if (savedFilterText) this.filterText = savedFilterText;
+
+    const savedFilterStatus = localStorage.getItem('filterStatus');
+    if (savedFilterStatus) this.filterStatus = savedFilterStatus;
+
+    const savedLang = localStorage.getItem('lang');
+    if (savedLang) {
+      this.currentLang = savedLang;
+      this.translate.use(savedLang);
+    } else {
+      this.translate.use(this.currentLang);
+    }
+
+    this.socket = io('http://localhost:3000');
+    this.socket.on(
+      'statusUpdate',
+      (data: { messageId: string; status: string }) => {
+        const notif = this.notifications.find(
+          (n) => n.messageId === data.messageId
+        );
+        if (notif) {
+          notif.status = data.status;
+          localStorage.setItem(
+            'notifications',
+            JSON.stringify(this.notifications)
+          );
+        }
+      }
+    );
   }
 
-  private saveNotifications() {
-    localStorage.setItem('notifications', JSON.stringify(this.notifications));
+  onFilterChange() {
+    localStorage.setItem('filterText', this.filterText);
+    localStorage.setItem('filterStatus', this.filterStatus);
   }
 
   ngOnDestroy(): void {
-    if (this.intervalId) clearInterval(this.intervalId);
+    if (this.socket) this.socket.disconnect();
   }
 
   send(): void {
@@ -78,40 +110,28 @@ export class NotificationComponent implements OnInit, OnDestroy {
     this.notificationService
       .sendNotification(id, this.message)
       .subscribe(() => {
-        this.notifications.push(newNotification);
-        this.saveNotifications();
+        this.notifications.unshift(newNotification);
+        localStorage.setItem(
+          'notifications',
+          JSON.stringify(this.notifications)
+        );
         this.message = '';
       });
   }
 
-  updateStatuses(): void {
-    this.notifications.forEach((n) => {
-      if (n.status === 'PENDING' || n.status === 'PROCESSING') {
-        this.notificationService.getStatus(n.messageId).subscribe((res) => {
-          n.status = res.status;
-          this.saveNotifications();
-        });
-      }
-    });
-  }
-
   changeLanguage(lang: string) {
+    this.currentLang = lang;
     this.translate.use(lang);
+    localStorage.setItem('lang', lang);
   }
 
   get filteredNotifications() {
-    return this.notifications
-      .filter((n) => {
-        const matchText =
-          !this.filterText ||
-          n.messageContent
-            .toLowerCase()
-            .includes(this.filterText.toLowerCase());
-        const matchStatus =
-          !this.filterStatus || n.status === this.filterStatus;
-        return matchText && matchStatus;
-      })
-      .slice()
-      .reverse();
+    return this.notifications.filter((n) => {
+      const matchText =
+        !this.filterText ||
+        n.messageContent.toLowerCase().includes(this.filterText.toLowerCase());
+      const matchStatus = !this.filterStatus || n.status === this.filterStatus;
+      return matchText && matchStatus;
+    });
   }
 }
